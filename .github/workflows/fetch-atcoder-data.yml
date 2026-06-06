@@ -1,0 +1,25 @@
+name: Fetch AtCoder data
+
+on:
+  schedule:
+    # Every Sunday 04:00 JST = Saturday 19:00 UTC
+    - cron: "0 19 * * 6"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch data
+        run: node scripts/fetch-atcoder-data.mjs
+
+      - name: Commit and push
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: update AtCoder data [skip ci]"
+          file_pattern: "data/*.json"
